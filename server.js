@@ -5,7 +5,7 @@ dotenv.config()
 const express = require("express");
 const mongoose = require("mongoose")
 const app = express();
-
+const methodOverride = require("method-override"); 
 
 
 //=============== MONGOOSE ===============//
@@ -22,6 +22,7 @@ const Car = require('./model/car.js')
 
 app.use(express.urlencoded({ extended: false }));
 const morgan = require("morgan");
+app.use(methodOverride("_method")); 
 
 //============ROUTES===========//
 
@@ -63,6 +64,11 @@ app.put('/cars/:carId', async (req, res) => {
     res.redirect("/cars");
 });
 
+app.delete("/cars/:carId", async (req, res) => {
+    await Car.findByIdAndDelete(req.params.carId);
+    res.redirect("/cars");
+  });
+
 
 app.post("/cars", async (req, res) => {
     //  console.log(req.body);
@@ -72,7 +78,7 @@ app.post("/cars", async (req, res) => {
         req.body.isElectric = false;
       }
       await Car.create(req.body)
-      res.redirect("/cars/new")
+      res.redirect("/cars")
 
     
 });
