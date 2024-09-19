@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>car.make</title>
+</head>
+<body>
+    <a href="/cars/">back to all cars</a>
+    <h1><%=car.make %> <%= car.model %></h1>
+    <% if (car.isElectric) { %>
+        <p>This car runs on a battery!</p>
+    <% } else { %>
+        <p>This car runs on gas!</p>
+    <% } %>
+    <form action="/cars/<%=car._id%>?_method=DELETE" method="POST">
+        <button type="submit">Delete <%= car.make %></button>
+    </form>
+      <a href="/cars/<%= car._id %>/edit">Edit <%= car.make %></a>
+      
+
+</body>
+</html>

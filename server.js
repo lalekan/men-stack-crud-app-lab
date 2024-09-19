@@ -7,6 +7,7 @@ const mongoose = require("mongoose")
 const app = express();
 
 
+
 //=============== MONGOOSE ===============//
 mongoose.connect(process.env.MONGODB_URI)
 mongoose.connection.on('connected', () => {
@@ -37,6 +38,31 @@ app.get('/cars/new', async(req, res) => {
     res.render("new.ejs")
 })
 
+app.get("/cars/:carId", async (req, res) => {
+    const foundCar = await Car.findById(req.params.carId);
+    res.render("show.ejs", { car: foundCar });
+});
+
+app.get("/cars/:carId/edit", async (req, res) => {
+    const foundCar = await Car.findById(req.params.carId);
+    res.render("edit.ejs", { car: foundCar });
+});
+
+app.put('/cars/:carId', async (req, res) => {
+    // Handle the 'isElectric' checkbox data
+    if (req.body.isElectric === "on") {
+      req.body.isElectric = true;
+    } else {
+      req.body.isElectric = false;
+    }
+    
+    // Update the car in the database
+    await Car.findByIdAndUpdate(req.params.carId, req.body);
+  
+    // Redirect to the car's show page to see the updates
+    res.redirect("/cars");
+});
+
 
 app.post("/cars", async (req, res) => {
     //  console.log(req.body);
@@ -49,7 +75,12 @@ app.post("/cars", async (req, res) => {
       res.redirect("/cars/new")
 
     
-  });
+});
+
+// server.js
+
+
+  
 
 
 app.listen(3000, () => {
